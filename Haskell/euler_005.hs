@@ -27,18 +27,15 @@
  - The product of the remaining numbers is the desired result:
  -      5 * 7 * 8 * 9 = 2520
 -}
+import Util
+import qualified Data.Map as Map
+import qualified Data.List as List
 
-primes = 2 : 3 : 5 : filter (null . tail . primeFactors) [7,9..]
-
-primeFactors n = factor n primes
+smallestMultiple n = evaluate $ highestPowers n
  where
-    factor n (x:xs)
-        | x * x > n      = [n]
-        | n `mod` x == 0 = x : factor (n `div` x) (x:xs)
-        | otherwise      = factor n xs
+    factorise [] = []
+    factorise (x:xs) = primeFactors x : factorise xs
 
-factorise []     = []
-factorise (x:xs) = primeFactors x : factorise xs
+    highestPowers n = Map.fromList $ List.sortBy (\ (_,a) (_,b) -> compare a b) $ filter (\ x -> snd x > 0) [x | x' <- factorise [2..n], let y = maximum x', let z = minimum x', y' <- [z..y], let x = (y', (count y' x'))]
 
-count :: Eq a => a -> [a] -> Int
-count x = length . filter (x==)
+    evaluate m = fst $ Map.mapAccumWithKey (\ a k b -> (a * k ^ b, b)) 1 m
