@@ -13,4 +13,4 @@
 
 import Util
 
-sumOfPrimes n = sum $ takeWhile (\ a -> a < n) primes
+sumOfPrimes n = sum $ takeWhile (< n) primes

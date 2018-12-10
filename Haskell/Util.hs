@@ -1,10 +1,9 @@
 module Util
 ( primes
-, multiples
-, union
 , count
 ) where
 
+primes :: [Int]
 primes = 2:([3..] `minus` composites)
  where
     composites = union [multiples p | p <- primes]
