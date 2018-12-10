@@ -1,17 +1,26 @@
 module Util
 ( primes
-, primeFactors
+, multiples
+, union
 , count
 ) where
-primes :: [Integer]
-primes = 2 : 3 : 5 : filter (null . tail . primeFactors) [7,9..]
 
-primeFactors n = factor n primes
+primes = 2:([3..] `minus` composites)
  where
-    factor n (x:xs)
-        | x * x > n      = [n]
-        | n `mod` x == 0 = x : factor (n `div` x) (x:xs)
-        | otherwise      = factor n xs
+    composites = union [multiples p | p <- primes]
+
+multiples n = map (n*) [n..]
+
+(x:xs) `minus` (y:ys)   | x<y   = x:(xs `minus` (y:ys))
+                        | x==y  = xs `minus` ys
+                        | x>y   = (x:xs) `minus` ys
+
+union = foldr merge []
+ where
+    merge (x:xs) ys = x:merge' xs ys
+    merge' (x:xs) (y:ys)  | x < y   = x:merge' xs (y:ys)
+                          | x == y  = x:merge' xs ys
+                          | x > y   = y:merge' (x:xs) ys
 
 count :: Eq a => a -> [a] -> Int
 count x = length . filter (x==)
