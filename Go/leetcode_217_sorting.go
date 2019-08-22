@@ -38,22 +38,8 @@
 
 import "sort"
 
-type numSlice []int
-
-func (s numSlice) Len() int {
-    return len(s)
-}
-
-func (s numSlice) Swap (i,j int) {
-    s[i], s[j] = s[j], s[i]
-}
-
-func (s numSlice) Less (i, j int) bool {
-    return s[i] < s[j]
-}
-
-func containsDuplicate(nums numSlice) bool {
-    sort.Sort(nums)
+func containsDuplicate(nums []int) bool {
+    sort.Ints(nums)
     for i := 1; i < len(nums); i++ {
         if nums[i] == nums[i-1] {
             return true
